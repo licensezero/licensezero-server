@@ -1,3 +1,3 @@
-module.exports = require('./singleton-get')(
+module.exports = require('./get-singleton')(
   require('../data/read-broker')
 )
