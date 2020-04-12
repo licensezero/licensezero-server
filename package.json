@@ -22,7 +22,7 @@
     "licenses": "licensee --errors-only",
     "lint": "standard",
     "precommit": "npm run lint && npm run test && npm run licenses",
-    "test": "tape test/*.test.js"
+    "test": "NODE_ENV=test tape test/*.test.js"
   },
   "husky": {
     "hooks": {
