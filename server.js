@@ -17,9 +17,10 @@ const requiredEnvironmentVariables = [
 
 if (process.env.NODE_ENV !== 'test') {
   requiredEnvironmentVariables.push(
-    'MAILGUN_KEY',
-    'MAILGUN_DOMAIN',
-    'MAILGUN_FROM'
+    'SMTP_HOST',
+    'SMTP_PORT',
+    'SMTP_USER',
+    'SMTP_PASSWORD'
   )
 }
 
