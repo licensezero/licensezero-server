@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "https://protocol.licensezero.com/1.0.0-pre/seller.json",
+  "type": "object",
+  "required": [
+    "jurisdiction",
+    "name"
+  ],
+  "properties": {
+    "jurisdiction": {
+      "$ref": "jurisdiction.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 3
+    }
+  }
+}

@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const https = require('https')
+const path = require('path')
+const simpleConcat = require('simple-concat')
+
+const names = [
+  'artifact',
+  'broker',
+  'bundle',
+  'currency',
+  'digest',
+  'id',
+  'jurisdiction',
+  'key',
+  'ledger',
+  'name',
+  'offer',
+  'order',
+  'price',
+  'receipt',
+  'register',
+  'seller',
+  'signature',
+  'time',
+  'url'
+]
+
+const base = 'https://protocol.licensezero.com/1.0.0-pre'
+
+var requires = names.map(name => `const ${name} = require('./${name}')`)
+
+fs.writeFile(
+  path.join(__dirname, 'schemas', 'index.js'),
+  `
+// schemas/generate generates this file.
+// Do not edit manually.
+${requires.join('\n')}
+
+const AJV = require('ajv')
+const ajv = new AJV()
+${names.map(name => `ajv.addSchema(${name}, ${name}.$id)`).join('\n')}
+
+module.exports = {
+  json: {
+    ${names.join(',\n    ')}
+  },
+  validate: {
+    ${names.map(name => `${name}: data => ajv.validate(${name}.$id, data)`).join(',\n    ')}
+  }
+}
+  `.trim() + '\n',
+  error => {
+    if (error) throw error
+  }
+)
+
+names.forEach(name => {
+  const file = `${name}.json`
+  const url = `${base}/${file}`
+  https.get(url, response => {
+    if (response.statusCode !== 200) {
+      throw new Error(`${url} responded ${response.statusCode}`)
+    }
+    simpleConcat(response, (error, buffer) => {
+      if (error) throw error
+      fs.writeFile(
+        path.join(__dirname, 'schemas', file),
+        buffer,
+        error => {
+          if (error) throw error
+        }
+      )
+    })
+  })
+})
