@@ -28,7 +28,7 @@
   },
   "scripts": {
     "audit": "npm audit --production",
-    "coverage": "nyc --reporter=lcov --reporter=text npm run test",
+    "coverage": "COVERAGE=true nyc --reporter=lcov --reporter=text npm run test",
     "deps": "depcheck",
     "licenses": "licensee --errors-only",
     "lint": "standard",

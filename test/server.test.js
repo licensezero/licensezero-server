@@ -6,7 +6,9 @@ const rimraf = require('rimraf')
 const spawn = require('child_process').spawn
 const tape = require('tape')
 
-tape('server.js', (test) => {
+const notCoverage = process.env.COVERAGE ? tape.skip : tape
+
+notCoverage('server.js', (test) => {
   const keys = ed25519.keys()
   const port = 8888
 
