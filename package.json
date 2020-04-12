@@ -1,4 +1,6 @@
 {
+  "name": "licensezero-server",
+  "version": "0.0.0-pre",
   "private": true,
   "dependencies": {
     "ajv": "^6.12.0",

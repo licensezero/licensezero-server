@@ -6,6 +6,13 @@ routes.set('/', (request, response) => {
   response.end()
 })
 
+const version = require('../package.json').version
+
+routes.set('/version', (request, response) => {
+  response.setHeader('Content-Type', 'text/plain')
+  response.end(version)
+})
+
 routes.set('/robots.txt', (request, response) => {
   response.setHeader('Content-Type', 'text/plain')
   response.end('User-Agent: *\nDisallow: /\n')
