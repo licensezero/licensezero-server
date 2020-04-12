@@ -32,3 +32,5 @@ routes.set('/sellers/:sellerID', require('./sellers'))
 routes.set('/offers/:offerID', require('./offers'))
 
 routes.set('/terms/service', require('./terms-of-service'))
+
+routes.set('/terms/brokerage', require('./brokerage-terms'))
