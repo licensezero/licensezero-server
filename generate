@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// This script writes downloads schemas from protocol.licensezero.com
+// and writes JavaScript modules to ./schemas.
 const dashToCamel = require('./util/dash-to-camel')
 const fs = require('fs')
 const https = require('https')

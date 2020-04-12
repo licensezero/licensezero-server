@@ -1,3 +1,6 @@
+// When testing, replace the SMTP client with a mock
+// that emits events for every message sent.  Tests
+// do `mail.events.on('sent', (options) => { ... })`.
 if (process.env.NODE_ENV === 'test') {
   const EventEmitter = require('events').EventEmitter
   const emitter = new EventEmitter()
