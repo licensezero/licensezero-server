@@ -18,7 +18,6 @@ module.exports = function (/* [port,] callback */) {
   fs.mkdtemp('/tmp/', (ignore, directory) => {
     const keys = ed25519.keys()
     process.env.DIRECTORY = directory
-    process.env.COMMISSION = 2
     process.env.PUBLIC_KEY = keys.publicKey
     process.env.PRIVATE_KEY = keys.privateKey
     process.env.REDIRECT = 'http://example.com'
