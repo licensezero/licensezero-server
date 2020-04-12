@@ -6,7 +6,10 @@ const uuid = require('uuid')
 tape('validators', test => {
   test.assert(schemas.validate.id(uuid.v4()), 'validates UUID')
   test.assert(schemas.validate.url('https://licensezero.com'), 'validates HTTPS URL')
-  test.assert(schemas.validate.key(ed25519.keys().publicKey), 'validates public key')
+  const keys = ed25519.keys()
+  test.assert(schemas.validate.key(keys.publicKey), 'validates public key')
+  const signature = ed25519.sign('test', keys.publicKey, keys.privateKey)
+  test.assert(schemas.validate.signature(signature), 'validates signature')
   test.end()
 })
 

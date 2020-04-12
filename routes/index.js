@@ -24,3 +24,9 @@ routes.set('/robots.txt', (request, response) => {
 routes.set('/internal-error', (request, response) => {
   throw new Error('internal error for testing')
 })
+
+routes.set('/broker', require('./broker'))
+
+routes.set('/sellers/:sellerID', require('./sellers'))
+
+routes.set('/offers/:offerID', require('./offers'))

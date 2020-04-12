@@ -28,7 +28,7 @@ const names = [
 
 const base = 'https://protocol.licensezero.com/1.0.0-pre'
 
-var requires = names.map(name => `const ${name} = require('./${name}')`)
+const requires = names.map(name => `const ${name} = require('./${name}')`)
 
 fs.writeFile(
   path.join(__dirname, 'schemas', 'index.js'),
