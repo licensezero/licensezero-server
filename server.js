@@ -30,6 +30,17 @@ requiredEnvironmentVariables.forEach(key => {
   }
 })
 
+const schemas = require('./schemas')
+if (!schemas.validate.publicKey(process.env.PUBLIC_KEY)) {
+  log.error({ key: 'PUBLIC_KEY' }, 'invalid public key')
+  process.exit(1)
+}
+
+if (!schemas.validate.privateKey(process.env.PRIVATE_KEY)) {
+  log.error({ key: 'PRIVATE_KEY' }, 'invalid public key')
+  process.exit(1)
+}
+
 // HTTP Server
 
 const requestHandler = require('./')(log)

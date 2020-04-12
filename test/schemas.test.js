@@ -7,7 +7,8 @@ tape('validators', test => {
   test.assert(schemas.validate.id(uuid.v4()), 'validates UUID')
   test.assert(schemas.validate.url('https://licensezero.com'), 'validates HTTPS URL')
   const keys = ed25519.keys()
-  test.assert(schemas.validate.key(keys.publicKey), 'validates public key')
+  test.assert(schemas.validate.publicKey(keys.publicKey), 'validates public key')
+  test.assert(schemas.validate.privateKey(keys.privateKey), 'validates private key')
   const signature = ed25519.sign('test', keys.publicKey, keys.privateKey)
   test.assert(schemas.validate.signature(signature), 'validates signature')
   test.end()
@@ -16,6 +17,7 @@ tape('validators', test => {
 tape('schemas', test => {
   test.equal(typeof schemas.json.id, 'object', 'UUID schema')
   test.equal(typeof schemas.json.url, 'object', 'URL schema')
-  test.equal(typeof schemas.json.key, 'object', 'key schema')
+  test.equal(typeof schemas.json.publicKey, 'object', 'public key schema')
+  test.equal(typeof schemas.json.privateKey, 'object', 'private key schema')
   test.end()
 })

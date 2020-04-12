@@ -1,8 +1,15 @@
 #!/usr/bin/env node
+const dashToCamel = require('./util/dash-to-camel')
 const fs = require('fs')
 const https = require('https')
 const path = require('path')
 const simpleConcat = require('simple-concat')
+
+const directory = 'schemas'
+
+fs.mkdir(path.join(__dirname, directory), { recursive: true }, error => {
+  if (error) throw error
+})
 
 const names = [
   'artifact',
@@ -12,12 +19,13 @@ const names = [
   'digest',
   'id',
   'jurisdiction',
-  'key',
   'ledger',
   'name',
   'offer',
   'order',
   'price',
+  'private-key',
+  'public-key',
   'receipt',
   'register',
   'seller',
@@ -28,25 +36,37 @@ const names = [
 
 const base = 'https://protocol.licensezero.com/1.0.0-pre'
 
-const requires = names.map(name => `const ${name} = require('./${name}')`)
+const requires = names.map(name => `const ${dashToCamel(name)} = require('./${name}')`)
+
+const ids = names.map(dashToCamel)
 
 fs.writeFile(
-  path.join(__dirname, 'schemas', 'index.js'),
+  path.join(__dirname, directory, 'README.md'),
   `
-// schemas/generate generates this file.
-// Do not edit manually.
+[\`generate\`](../generate) generates all the files in this directory.
+
+Do not edit the files here manually.
+  `.trim() + '\n',
+  error => {
+    if (error) throw error
+  }
+)
+
+fs.writeFile(
+  path.join(__dirname, directory, 'index.js'),
+  `
 ${requires.join('\n')}
 
 const AJV = require('ajv')
 const ajv = new AJV()
-${names.map(name => `ajv.addSchema(${name}, ${name}.$id)`).join('\n')}
+${ids.map(id => `ajv.addSchema(${id}, ${id}.$id)`).join('\n')}
 
 module.exports = {
   json: {
-    ${names.join(',\n    ')}
+    ${ids.join(',\n    ')}
   },
   validate: {
-    ${names.map(name => `${name}: data => ajv.validate(${name}.$id, data)`).join(',\n    ')}
+    ${ids.map(id => `${id}: data => ajv.validate(${id}.$id, data)`).join(',\n    ')}
   }
 }
   `.trim() + '\n',
@@ -65,7 +85,7 @@ names.forEach(name => {
     simpleConcat(response, (error, buffer) => {
       if (error) throw error
       fs.writeFile(
-        path.join(__dirname, 'schemas', file),
+        path.join(__dirname, directory, file),
         buffer,
         error => {
           if (error) throw error
