@@ -3,13 +3,14 @@ const dashToCamel = require('./util/dash-to-camel')
 const fs = require('fs')
 const https = require('https')
 const path = require('path')
+const rimraf = require('rimraf')
 const simpleConcat = require('simple-concat')
 
-const directory = 'schemas'
+const directory = path.join(__dirname, 'schemas')
 
-fs.mkdir(path.join(__dirname, directory), { recursive: true }, error => {
-  if (error) throw error
-})
+rimraf.sync(directory)
+
+fs.mkdirSync(directory)
 
 const names = [
   'artifact',
@@ -40,20 +41,17 @@ const requires = names.map(name => `const ${dashToCamel(name)} = require('./${na
 
 const ids = names.map(dashToCamel)
 
-fs.writeFile(
-  path.join(__dirname, directory, 'README.md'),
+fs.writeFileSync(
+  path.join(directory, 'README.md'),
   `
 [\`generate\`](../generate) generates all the files in this directory.
 
 Do not edit the files here manually.
-  `.trim() + '\n',
-  error => {
-    if (error) throw error
-  }
+  `.trim() + '\n'
 )
 
-fs.writeFile(
-  path.join(__dirname, directory, 'index.js'),
+fs.writeFileSync(
+  path.join(directory, 'index.js'),
   `
 ${requires.join('\n')}
 
@@ -69,10 +67,7 @@ module.exports = {
     ${ids.map(id => `${id}: data => ajv.validate(${id}.$id, data)`).join(',\n    ')}
   }
 }
-  `.trim() + '\n',
-  error => {
-    if (error) throw error
-  }
+  `.trim() + '\n'
 )
 
 names.forEach(name => {
@@ -84,12 +79,9 @@ names.forEach(name => {
     }
     simpleConcat(response, (error, buffer) => {
       if (error) throw error
-      fs.writeFile(
-        path.join(__dirname, directory, file),
-        buffer,
-        error => {
-          if (error) throw error
-        }
+      fs.writeFileSync(
+        path.join(directory, file),
+        buffer
       )
     })
   })
