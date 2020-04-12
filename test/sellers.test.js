@@ -33,17 +33,6 @@ tape('GET /sellers/{invalid}', test => {
   })
 })
 
-tape('GET /sellers/{nonexistent}', test => {
-  server((port, close) => {
-    const id = uuid.v4()
-    http.request({ port, path: `/sellers/${id}` }, response => {
-      test.equal(response.statusCode, 404, '404')
-      test.end()
-      close()
-    }).end()
-  })
-})
-
 tape('GET /sellers/{id} error', test => {
   server((port, close) => {
     const id = require('../data/error-test-id')
@@ -55,13 +44,6 @@ tape('GET /sellers/{id} error', test => {
   })
 })
 
-tape('POST /sellers/{id}', test => {
-  server((port, close) => {
-    const id = uuid.v4()
-    http.request({ port, path: `/sellers/${id}`, method: 'POST' }, response => {
-      test.equal(response.statusCode, 405, '405')
-      test.end()
-      close()
-    }).end()
-  })
-})
+require('./not-found')(`/sellers/${uuid.v4()}`)
+
+require('./get-only')(`/sellers/${uuid.v4()}`)
