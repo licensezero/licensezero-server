@@ -19,7 +19,7 @@ routes.set('/robots.txt', (request, response) => {
 })
 
 // test/internal-error.test.js uses this route to
-// ttest handling of hrown errors and to cover
+// test handling of hrown errors and to cover
 // trouter/internal-error.js.
 routes.set('/internal-error', (request, response) => {
   throw new Error('internal error for testing')
@@ -27,9 +27,23 @@ routes.set('/internal-error', (request, response) => {
 
 routes.set('/broker', require('./broker'))
 
-routes.set('/sellers/:sellerID', require('./sellers'))
+const schemas = require('../schemas')
+const getByID = require('./get-by-id')
+const read = require('../data/read')
 
-routes.set('/offers/:offerID', require('./offers'))
+const byID = ['seller', 'offer', 'receipt', 'bundle', 'order']
+byID.forEach(singular => {
+  const plural = singular + 's'
+  const parameter = singular + 'ID'
+  routes.set(
+    `/${plural}/:${parameter}`,
+    getByID(
+      parameter,
+      schemas.validate.id,
+      read[singular]
+    )
+  )
+})
 
 routes.set('/terms/service', require('./terms-of-service'))
 

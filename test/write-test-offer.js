@@ -1,11 +1,11 @@
 const offer = require('./offer')
 const fs = require('fs')
-const offerPath = require('../data/paths/offer')
+const paths = require('../data/paths')
 const path = require('path')
 const runSeries = require('run-series')
 
 module.exports = callback => {
-  const file = offerPath(offer.id)
+  const file = paths.offer(offer.id)
   runSeries([
     done => {
       fs.mkdir(path.dirname(file), { recursive: true }, done)

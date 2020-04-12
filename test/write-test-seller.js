@@ -1,11 +1,11 @@
-const seller = require('./seller')
 const fs = require('fs')
-const sellerPath = require('../data/paths/seller')
 const path = require('path')
+const paths = require('../data/paths')
 const runSeries = require('run-series')
+const seller = require('./seller')
 
 module.exports = callback => {
-  const file = sellerPath(seller.id)
+  const file = paths.seller(seller.id)
   runSeries([
     done => {
       fs.mkdir(path.dirname(file), { recursive: true }, done)

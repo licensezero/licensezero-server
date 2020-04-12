@@ -1,10 +1,10 @@
 const fs = require('fs')
-const termsOfServicePath = require('../data/paths/terms-of-service')
+const paths = require('../data/paths')
 const path = require('path')
 const runSeries = require('run-series')
 
 module.exports = callback => {
-  const file = termsOfServicePath()
+  const file = paths.termsOfService()
   runSeries([
     done => {
       fs.mkdir(path.dirname(file), { recursive: true }, done)
