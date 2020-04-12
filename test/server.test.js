@@ -12,7 +12,7 @@ tape('server.js', (test) => {
 
   fs.mkdtemp('/tmp/', (ignore, directory) => {
     const server = spawn(
-      'node',
+      process.argv[0],
       [path.join(__dirname, '..', 'server.js')],
       {
         env: {
