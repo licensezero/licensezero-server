@@ -1,6 +1,6 @@
 const pino = require('pino')
 
-const log = pino({ name: 'licensezero.com' })
+const log = pino({ name: 'licensezero-server' })
 
 log.info({ directory: process.env.DIRECTORY }, 'starting')
 
