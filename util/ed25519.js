@@ -1,12 +1,12 @@
-var sodium = require('sodium-native')
+const sodium = require('sodium-native')
 
 // Wrap an implementation of Ed25519 in our own API,
 // which expects and returns hex-encoded strings.
 
 module.exports = {
   keys: () => {
-    var publicKey = Buffer.alloc(32)
-    var secretKey = Buffer.alloc(64)
+    const publicKey = Buffer.alloc(32)
+    const secretKey = Buffer.alloc(64)
     sodium.crypto_sign_keypair(publicKey, secretKey)
     return {
       privateKey: secretKey.toString('hex'),
@@ -15,7 +15,7 @@ module.exports = {
   },
 
   sign: (message, publicKey, privateKey) => {
-    var signature = Buffer.alloc(64)
+    const signature = Buffer.alloc(64)
     sodium.crypto_sign_detached(
       signature,
       Buffer.from(message, 'utf8'),
