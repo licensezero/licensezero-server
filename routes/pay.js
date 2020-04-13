@@ -5,6 +5,7 @@ const expired = require('../data/expired')
 const formatUSD = require('../util/format-usd')
 const internalError = require('./internal-error')
 const read = require('../data/read')
+const runAuto = require('run-auto')
 const runParallelLimit = require('run-parallel-limit')
 const schemas = require('../schemas')
 
@@ -51,73 +52,94 @@ function get (request, response) {
         })
       }
 
-      const offerIDs = order['offerIDs[]']
-      runParallelLimit(offerIDs.map(offerID => {
-        return done => {
-          read.offer(offerID, (error, offer) => {
-            if (error) return done(error)
-            offer.offerID = offerID
-            const single = offer.pricing.single
-            if (single.currency === 'USD') {
-              single.formatted = formatUSD(single.amount)
+      runAuto({
+        offers: done => {
+          const offerIDs = order['offerIDs[]']
+          runParallelLimit(offerIDs.map(offerID => {
+            return done => {
+              read.offer(offerID, (error, offer) => {
+                if (error) return done(error)
+                offer.offerID = offerID
+                const single = offer.pricing.single
+                if (single.currency === 'USD') {
+                  single.formatted = formatUSD(single.amount)
+                }
+                done(null, offer)
+              })
             }
-            done(null, offer)
+          }), 3, done)
+        },
+
+        sellerIDs: ['offers', (results, done) => {
+          const sellerIDs = []
+          results.offers.forEach(offer => {
+            const sellerID = offer.sellerID
+            if (!sellerIDs.includes(sellerID)) {
+              sellerIDs.push(sellerID)
+            }
           })
-        }
-      }), 3, (error, offers) => {
-        if (error) return internalError(request, response, error)
-        const sellerIDs = []
-        offers.forEach(offer => {
-          const sellerID = offer.sellerID
-          if (!sellerIDs.includes(sellerID)) {
-            sellerIDs.push(sellerID)
-          }
-        })
-        runParallelLimit(sellerIDs.map(sellerID => {
-          return done => {
-            read.seller(sellerID, (error, seller) => {
-              if (error) return done(error)
-              seller.sellerID = sellerID
-              done(null, seller)
+          done(null, sellerIDs)
+        }],
+
+        sellers: ['offers', 'sellerIDs', (results, done) => {
+          runParallelLimit(results.sellerIDs.map(sellerID => {
+            return done => {
+              read.seller(sellerID, (error, seller) => {
+                if (error) return done(error)
+                seller.sellerID = sellerID
+                done(null, seller)
+              })
+            }
+          }), 3, (error, sellers) => {
+            if (error) return done(error)
+            // Add sellers to their offers.
+            results.offers.forEach(offer => {
+              offer.seller = sellers.find(seller => {
+                return seller.sellerID === offer.sellerID
+              })
             })
-          }
-        }), 3, (error, sellers) => {
-          if (error) return internalError(request, response, error)
-          offers.forEach(offer => {
-            offer.seller = sellers.find(seller => {
-              return seller.sellerID === offer.sellerID
-            })
+            done(null, sellers)
           })
+        }],
+
+        broker: done => {
           read.broker((error, broker) => {
             if (error && error.code !== 'ENOENT') {
-              return internalError(request, response, error)
+              return done(error)
             }
-            let totalAmount = 0
-            offers.forEach(offer => {
-              const single = offer.pricing.single
-              if (single.currency === 'USD') {
-                totalAmount += single.amount
-              }
-            })
-            const totalFormatted = formatUSD(totalAmount)
-            render({
-              request,
-              response,
-              read: read.payTemplate,
-              data: {
-                action: '/pay?orderID=' + orderID,
-                broker,
-                order,
-                orderID,
-                offers,
-                total: {
-                  amount: totalAmount,
-                  formatted: totalFormatted
-                },
-                paymentUI: ''
-              }
-            })
+            done(null, broker)
           })
+        },
+
+        total: ['offers', (results, done) => {
+          let amount = 0
+          results.offers.forEach(offer => {
+            const single = offer.pricing.single
+            if (single.currency === 'USD') {
+              amount += single.amount
+            }
+          })
+          done(null, {
+            amount,
+            formatted: formatUSD(amount)
+          })
+        }]
+      }, (error, results) => {
+        if (error) return internalError(request, response, error)
+
+        render({
+          request,
+          response,
+          read: read.payTemplate,
+          data: {
+            action: '/pay?orderID=' + orderID,
+            broker: results.broker,
+            order,
+            orderID,
+            offers: results.offers,
+            total: results.total,
+            paymentUI: ''
+          }
         })
       })
     })
