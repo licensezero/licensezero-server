@@ -40,7 +40,8 @@
     "deps": "depcheck",
     "licenses": "licensee --errors-only",
     "lint": "standard",
-    "precommit": "npm run lint && npm run test && npm run licenses",
+    "noonlytest": "! git grep -F 'tape.only' test",
+    "precommit": "npm run lint && npm run noonlytest && npm run test && npm run licenses",
     "test": "NODE_ENV=test tape test/*.test.js"
   },
   "husky": {
