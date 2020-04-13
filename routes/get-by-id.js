@@ -2,7 +2,7 @@ const doNotCache = require('do-not-cache')
 const internalError = require('./internal-error')
 const notFound = require('./not-found')
 
-module.exports = (parameter, validate, read) => {
+module.exports = (parameter, validate, read, unwrap) => {
   return (request, response) => {
     doNotCache(response)
     if (request.method !== 'GET') {
@@ -23,7 +23,8 @@ module.exports = (parameter, validate, read) => {
         }
       }
       response.setHeader('Content-Type', 'application/json')
-      response.end(JSON.stringify(data))
+      const body = unwrap ? unwrap(data) : data
+      response.end(JSON.stringify(body))
     })
   }
 }

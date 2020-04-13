@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.12.0",
+    "busboy": "^0.3.1",
     "do-not-cache": "^1.0.1",
     "http-hash": "^2.0.1",
     "json-parse-errback": "^2.0.1",
@@ -12,6 +13,7 @@
     "pino": "^6.1.1",
     "pino-http": "^5.0.0",
     "rimraf": "^3.0.2",
+    "run-parallel": "^1.1.9",
     "run-series": "^1.1.8",
     "run-waterfall": "^1.1.6",
     "simple-concat": "^1.0.0",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "depcheck": "^0.9.2",
+    "form-data": "^3.0.0",
     "husky": "^4.2.5",
     "licensee": "^8.0.2",
     "nyc": "^15.0.1",

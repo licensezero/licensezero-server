@@ -40,7 +40,10 @@ byID.forEach(singular => {
     getByID(
       parameter,
       schemas.validate.id,
-      read[singular]
+      read[singular],
+      singular === 'order'
+        ? record => record.order
+        : false
     )
   )
 })
@@ -48,3 +51,5 @@ byID.forEach(singular => {
 routes.set('/terms/service', require('./terms-of-service'))
 
 routes.set('/terms/brokerage', require('./brokerage-terms'))
+
+routes.set('/order', require('./order'))
