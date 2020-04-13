@@ -112,7 +112,7 @@ function checkOfferIDs (offer, callback) {
 function writeOrder (request, orderID, order, callback) {
   const path = paths.order(orderID)
   const record = {
-    date: new Date().toISOString(),
+    created: new Date().toISOString(),
     xForwardedFor: request.headers['x-forwarded-for'],
     remoteAddress: request.connection.remoteAddress,
     userAgent: request.headers['user-agent'],
