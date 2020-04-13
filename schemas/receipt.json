@@ -64,29 +64,7 @@
               "$ref": "price.json"
             },
             "buyer": {
-              "title": "buyer",
-              "comment": "The buyer is the one receiving the license.",
-              "type": "object",
-              "required": [
-                "email",
-                "jurisdiction",
-                "name"
-              ],
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "format": "email"
-                },
-                "jurisdiction": {
-                  "$ref": "jurisdiction.json"
-                },
-                "name": {
-                  "$ref": "name.json",
-                  "examples": [
-                    "Joe Buyer"
-                  ]
-                }
-              }
+              "$ref": "buyer.json"
             },
             "recurring": {
               "const": true

@@ -17,6 +17,7 @@ fs.mkdirSync(directory)
 const names = [
   'artifact',
   'broker',
+  'buyer',
   'bundle',
   'currency',
   'digest',

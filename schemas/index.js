@@ -1,5 +1,6 @@
 const artifact = require('./artifact')
 const broker = require('./broker')
+const buyer = require('./buyer')
 const bundle = require('./bundle')
 const currency = require('./currency')
 const digest = require('./digest')
@@ -23,6 +24,7 @@ const AJV = require('ajv')
 const ajv = new AJV()
 ajv.addSchema(artifact, artifact.$id)
 ajv.addSchema(broker, broker.$id)
+ajv.addSchema(buyer, buyer.$id)
 ajv.addSchema(bundle, bundle.$id)
 ajv.addSchema(currency, currency.$id)
 ajv.addSchema(digest, digest.$id)
@@ -46,6 +48,7 @@ module.exports = {
   json: {
     artifact,
     broker,
+    buyer,
     bundle,
     currency,
     digest,
@@ -68,6 +71,7 @@ module.exports = {
   validate: {
     artifact: data => ajv.validate(artifact.$id, data),
     broker: data => ajv.validate(broker.$id, data),
+    buyer: data => ajv.validate(buyer.$id, data),
     bundle: data => ajv.validate(bundle.$id, data),
     currency: data => ajv.validate(currency.$id, data),
     digest: data => ajv.validate(digest.$id, data),
