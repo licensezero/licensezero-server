@@ -8,7 +8,7 @@
     "email",
     "jurisdiction",
     "name",
-    "website"
+    "url"
   ],
   "additionalProperties": false,
   "properties": {
@@ -25,7 +25,7 @@
         "Artless Devices LLC"
       ]
     },
-    "website": {
+    "url": {
       "$ref": "url.json"
     }
   }

@@ -6,7 +6,7 @@
     "email",
     "jurisdiction",
     "name",
-    "website"
+    "url"
   ],
   "properties": {
     "email": {
@@ -20,7 +20,7 @@
       "type": "string",
       "minLength": 3
     },
-    "website": {
+    "url": {
       "$ref": "url.json"
     }
   }

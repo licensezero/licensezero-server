@@ -6,5 +6,5 @@ exports.data = {
   email: 'seller@example.com',
   jurisdiction: 'US-CA',
   name: 'Joe Licensor',
-  website: 'https://example.com/~seller'
+  url: 'https://example.com/~seller'
 }
