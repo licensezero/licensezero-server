@@ -43,7 +43,13 @@ function readByID (pathFunction) {
   }
 }
 
-const templates = ['pay', 'order-not-found', 'invalid-offer-ids']
+const templates = [
+  'pay',
+  'order-not-found',
+  'invalid-offer-ids',
+  'license-terms',
+  'license-page'
+]
 templates.forEach(basename => {
   const identifier = dashToCamel(basename) + 'Template'
   exports[identifier] = readTemplate(basename, identifier)

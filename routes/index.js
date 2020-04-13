@@ -52,6 +52,8 @@ routes.set('/terms/service', require('./terms-of-service'))
 
 routes.set('/terms/brokerage', require('./brokerage-terms'))
 
+routes.set('/terms/license', require('./license-terms'))
+
 routes.set('/order', require('./order'))
 
 routes.set('/pay', require('./pay'))

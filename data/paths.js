@@ -24,6 +24,8 @@ module.exports = {
   bundles,
   bundle,
   invalidOfferIDs: () => file('invalid-offer-ids.ejs'),
+  licensePageTemplate: () => file('license-page.ejs'),
+  licenseTermsTemplate: () => file('license-terms.ejs'),
   orderNotFoundTemplate: () => file('order-not-found.ejs'),
   offer,
   offers,
