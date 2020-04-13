@@ -1,6 +1,8 @@
+const dashToCamel = require('../util/dash-to-camel')
 const errorTestID = require('./error-test-id')
 const fs = require('fs')
 const parseJSON = require('json-parse-errback')
+const path = require('path')
 const paths = require('./paths')
 const runWaterfall = require('run-waterfall')
 
@@ -38,5 +40,27 @@ function readByID (pathFunction) {
       fs.readFile.bind(fs, pathFunction(id)),
       parseJSON
     ], callback)
+  }
+}
+
+const templates = ['pay', 'order-not-found', 'invalid-offer-ids']
+templates.forEach(basename => {
+  const identifier = dashToCamel(basename) + 'Template'
+  exports[identifier] = readTemplate(basename, identifier)
+})
+
+function readTemplate (basename, identifier) {
+  return (callback) => {
+    fs.readFile(paths[identifier](), 'utf8', (error, template) => {
+      if (error) return yieldDefault()
+      callback(null, template)
+    })
+    function yieldDefault () {
+      fs.readFile(
+        path.join(__dirname, '..', 'templates', basename + '.ejs'),
+        'utf8',
+        callback
+      )
+    }
   }
 }

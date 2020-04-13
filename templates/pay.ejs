@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang=en-US>
+  <head>
+    <meta charset=UTF-8>
+    <title>Pay</title>
+  </head>
+  <body>
+    <main>
+      <h1>Pay</h1>
+      <section>
+        <h2>For</h2>
+        <dl>
+          <dt>Legal Name</dt>
+          <dd><%= order.name %></dd>
+          <dt>Jurisdiction</dt>
+          <dd><%= order.jurisdiction %></dd>
+          <dt>E-Mail</dt>
+          <dd><%= order.email %></dd>
+        </dl>
+      </section>
+      <section>
+        <h2>Licenses</h2>
+        <table>
+          <% offers.forEach(offer => { %>
+          <tr>
+            <td><code><%= offer.offerID %></code></td>
+            <td><a href="<%= offer.url %>"><%= offer.url %></a></td>
+            <td>
+              <a href="/sellers/<%= offer.seller.sellerID %>">
+                <%= offer.seller.name %>
+                [<%= offer.seller.jurisdiction %>]
+              </a>
+            </td>
+            <td>
+              <% if (offer.pricing.single.formatted) { %>
+              <span class=price><%= offer.pricing.single.formatted %></span>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </table>
+      </section>
+      <% if (broker) { %>
+      <section>
+        <h2>Broker</h2>
+        <dl>
+          <dt>Name</dt>
+          <dd><%= broker.name %></dd>
+          <dt>E-Mail</dt>
+          <dd><%= broker.email %></dd>
+          <dt>Jurisdiction</dt>
+          <dd><%= broker.jurisdiction %></dd>
+          <dt>Website</dt>
+          <dd><%= broker.website %></dd>
+        </dl>
+      </section>
+      <% } %>
+      <section>
+        <h2>Terms</h2>
+        <p><a href="/terms/license">standard license terms</a></p>
+      </section>
+      <section>
+        <h2>Total</h2>
+        <p><span class="price total"><%= total.formatted %></span></p>
+      </section>
+      <%- paymentUI %>
+    </main>
+  </body>
+</html>

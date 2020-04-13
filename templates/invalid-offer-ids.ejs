@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang=en-US>
+  <head>
+    <meta charset=UTF-8>
+    <title>No Longer Available</title>
+  </head>
+  <body>
+    <h1>No Longer Available</h1>
+    <p>The following offers were part of this order, but are no longer available:</p>
+    <ul>
+      <% offerIDs.forEach(offerID => { %>
+      <li><%= offerID %></li>
+      <% }) %>
+    </ul>
+    <p>Order ID: <code><%= offerID %></code></p>
+  </body>
+</html>

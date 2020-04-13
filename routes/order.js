@@ -1,10 +1,9 @@
 const Busboy = require('busboy')
+const checkOfferIDs = require('../util/check-offer-ids')
 const dirname = require('path').dirname
 const fs = require('fs')
 const internalError = require('./internal-error')
 const paths = require('../data/paths')
-const read = require('../data/read')
-const runParallel = require('run-parallel')
 const runSeries = require('run-series')
 const schemas = require('../schemas')
 const uuid = require('uuid')
@@ -83,30 +82,6 @@ module.exports = (request, response) => {
   })
 
   request.pipe(parser)
-}
-
-function checkOfferIDs (offer, callback) {
-  const missing = []
-  runParallel(
-    offer['offerIDs[]'].map(offerID => {
-      return done => {
-        read.offer(offerID, (error, _) => {
-          if (error) {
-            if (error.code === 'ENOENT') {
-              missing.push(offerID)
-            } else {
-              callback(error)
-            }
-          }
-          done()
-        })
-      }
-    }),
-    error => {
-      if (error) return callback(error)
-      callback(null, missing)
-    }
-  )
 }
 
 function writeOrder (request, orderID, order, callback) {
