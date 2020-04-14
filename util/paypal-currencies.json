@@ -1,0 +1,155 @@
+[
+  {
+    "name": "Australian dollar",
+    "code": "AUD",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Brazilian real",
+    "code": "BRL",
+    "decimal": true,
+    "inCountryOnly": true,
+    "automaticallyConverted": true
+  },
+  {
+    "name": "Canadian dollar",
+    "code": "CAD",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Czech koruna",
+    "code": "CZK",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Danish krone",
+    "code": "DKK",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Euro",
+    "code": "EUR",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Hong Kong dollar",
+    "code": "HKD",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Hungarian forint",
+    "code": "HUF",
+    "decimal": false,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Indian rupee",
+    "code": "INR",
+    "decimal": true,
+    "inCountryOnly": true,
+    "automaticallyConverted": false
+  },
+  {
+    "name": "Israeli new shekel",
+    "code": "ILS",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Japanese yen",
+    "code": "JPY",
+    "decimal": false,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Malaysian ringgit",
+    "code": "MYR",
+    "decimal": true,
+    "inCountryOnly": true,
+    "automaticallyConverted": true
+  },
+  {
+    "name": "Mexican peso",
+    "code": "MXN",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "New Taiwan dollar",
+    "code": "TWD",
+    "decimal": false,
+    "inCountryOnly": false
+  },
+  {
+    "name": "New Zealand dollar",
+    "code": "NZD",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Norwegian krone",
+    "code": "NOK",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Philippine peso",
+    "code": "PHP",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Polish złoty",
+    "code": "PLN",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Pound sterling",
+    "code": "GBP",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Russian ruble",
+    "code": "RUB",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Singapore dollar",
+    "code": "SGD",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Swedish krona",
+    "code": "SEK",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Swiss franc",
+    "code": "CHF",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "Thai baht",
+    "code": "THB",
+    "decimal": true,
+    "inCountryOnly": false
+  },
+  {
+    "name": "United States dollar",
+    "code": "USD",
+    "decimal": true,
+    "inCountryOnly": false
+  }
+]
