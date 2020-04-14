@@ -76,6 +76,15 @@ jobs.forEach(job => {
   running.push(scheduled)
 })
 
+// Policy Enforcement
+const policyLog = log.child({ subsystem: 'policy' })
+require('./policy/enforce')(policyLog, error => {
+  if (error) {
+    policyLog.error(error)
+    shutDown()
+  }
+})
+
 // Shutdown
 
 function logSignalAndShutDown () {
