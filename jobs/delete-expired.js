@@ -15,7 +15,7 @@ module.exports = (pathFunction) => {
         return callback(error)
       }
       runParallelLimit(entries.map((entry) => {
-        return function (done) {
+        return (done) => {
           var file = path.join(directory, entry)
           fs.readFile(file, (error, buffer) => {
             if (error) {
@@ -26,7 +26,7 @@ module.exports = (pathFunction) => {
             try {
               order = JSON.parse(buffer)
             } catch (error) {
-              return callback(error)
+              return done(error)
             }
             if (!expired(order.created)) return done()
             var dataToLog = { order: order.orderID, file }
