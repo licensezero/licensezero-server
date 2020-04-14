@@ -21,6 +21,7 @@
     "run-series": "^1.1.8",
     "run-waterfall": "^1.1.6",
     "simple-concat": "^1.0.0",
+    "simple-concat-limit": "^2.0.0",
     "sodium-native": "^3.0.1",
     "url-parse": "^1.4.7",
     "uuid": "^7.0.3"
