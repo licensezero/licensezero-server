@@ -57,3 +57,5 @@ routes.set('/terms/license', require('./license-terms'))
 routes.set('/order', require('./order'))
 
 routes.set('/pay', require('./pay'))
+
+routes.set('/paypal-webhook', require('./paypal-webhook'))

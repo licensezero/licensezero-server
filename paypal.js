@@ -6,7 +6,12 @@ const host = process.env.NODE_ENV === 'test'
   ? 'https://api.sandbox.paypal.com'
   : 'https://api.paypal.com'
 
-module.exports = { getToken, createOrder, captureOrder }
+module.exports = {
+  captureOrder,
+  createOrder,
+  getToken,
+  verifyNotification
+}
 
 function getToken (callback) {
   let failed = false
@@ -20,9 +25,7 @@ function getToken (callback) {
       'Accept-Language': 'en_US'
     }
   })
-    .once('error', error => {
-      fail(error)
-    })
+    .once('error', error => { fail(error) })
     .once('response', response => {
       if (failed) return
       simpleConcatLimit(response, 512, (error, buffer) => {
@@ -81,9 +84,7 @@ function createOrder ({ orderID, order, offers }, callback) {
         'Content-Type': 'application/json'
       }
     })
-      .once('error', error => {
-        fail(error)
-      })
+      .once('error', error => { fail(error) })
       .once('response', response => {
         if (failed) return
         if (response.statusCode !== 201) {
@@ -141,6 +142,54 @@ function captureOrder (payPalID, callback) {
         callback()
       })
       .end()
+  })
+
+  function fail (error) {
+    if (failed) return
+    failed = true
+    callback(error)
+  }
+}
+
+function verifyNotification ({ headers, body }, callback) {
+  let failed = false
+  getToken((error, token) => {
+    if (error) return callback(error)
+    https.request({
+      host,
+      path: '/v1/notifications/verify-webhook-signature',
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+      .once('error', error => { fail(error) })
+      .once('response', response => {
+        if (failed) return
+        if (response.statusCode !== 200) {
+          return fail(new Error('PayPal responded ' + response.statusCode))
+        }
+        simpleConcatLimit(response, 512, (error, buffer) => {
+          if (failed) return
+          if (error) return fail(error)
+          let data
+          try {
+            data = JSON.parse(buffer)
+          } catch (error) {
+            return fail(error)
+          }
+          callback(null, data.verification_status === 'SUCCESS')
+        })
+      })
+      .end(JSON.stringify({
+        transmission_id: headers['PAYPAL-TRANSMISSION-ID'],
+        transmission_time: headers['PAYPAL-TRANSMISSION-TIME'],
+        transmission_sig: headers['PAYPAL-TRANSMISSION-SIG'],
+        cert_url: headers['PAYPAL-CERT-URL'],
+        webhook_id: process.env.PAYPAL_WEBHOOK_ID,
+        webhook_event: body
+      }))
   })
 
   function fail (error) {
