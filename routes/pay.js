@@ -1,9 +1,13 @@
+const amountToValue = require('../util/amount-to-value')
 const checkOfferIDs = require('../util/check-offer-ids')
 const doNotCache = require('do-not-cache')
 const ejs = require('ejs')
 const expired = require('../data/expired')
 const formatUSD = require('../util/format-usd')
+const fs = require('fs')
 const internalError = require('./internal-error')
+const path = require('path')
+const querystring = require('querystring')
 const read = require('../data/read')
 const runAuto = require('run-auto')
 const runParallelLimit = require('run-parallel-limit')
@@ -123,22 +127,58 @@ function get (request, response) {
             amount,
             formatted: formatUSD(amount)
           })
-        }]
+        }],
+        javascript: done => {
+          fs.readFile(
+            path.join(__dirname, '..', 'client', 'paypal-buttons.js'),
+            'utf8',
+            done
+          )
+        }
       }, (error, results) => {
         if (error) return internalError(request, response, error)
+
+        const orderData = {
+          purchase_units: [
+            {
+              amount: {
+                value: amountToValue(results.total)
+              }
+            }
+          ]
+        }
+        const src = 'https://www.paypal.com/sdk/js?' + querystring.stringify({
+          'client-id': process.env.PAYPAL_CLIENT_ID,
+          commit: 'false', // Show "Pay Now", not "Continue".
+          components: [
+            'buttons',
+            'funding-eligibility' // For limiting to credit cards.
+          ].join(','),
+          currency: 'USD',
+          intent: 'capture',
+          vault: 'false',
+          'integration-date': '2020-04-14'
+        })
+        const paymentUI = `
+<div id="paypal-playpen"></div>
+<script src="${src}"></script>
+<script>
+var orderData = ${JSON.stringify(orderData)}
+${results.javascript}
+</script>
+        `.trim()
 
         render({
           request,
           response,
           read: read.payTemplate,
           data: {
-            action: '/pay?orderID=' + orderID,
             broker: results.broker,
             order,
             orderID,
             offers: results.offers,
             total: results.total,
-            paymentUI: ''
+            paymentUI
           }
         })
       })
