@@ -64,9 +64,6 @@ function createOrder ({ orderID, order, offers }, callback) {
         name: 'software license',
         sku: offer.id
       },
-      payer: {
-        email: order.email
-      },
       amount: {
         currency_code: single.currency,
         value: amountToValue(single.amount)

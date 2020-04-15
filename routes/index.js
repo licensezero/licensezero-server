@@ -58,4 +58,8 @@ routes.set('/order', require('./order'))
 
 routes.set('/pay', require('./pay'))
 
+routes.set('/paypal-order', require('./paypal-order'))
+routes.set('/paypal-capture', require('./paypal-capture'))
 routes.set('/paypal-webhook', require('./paypal-webhook'))
+
+routes.set('/download/:orderID', require('./download'))

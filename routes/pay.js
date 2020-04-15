@@ -15,17 +15,13 @@ const schemas = require('../schemas')
 
 module.exports = (request, response) => {
   doNotCache(response)
-  const method = request.method
-  if (method === 'GET') {
-    return get(request, response)
-  } else if (method === 'POST') {
-    return post(request, response)
-  }
-  response.statusCode = 405
-  response.end()
-}
 
-function get (request, response) {
+  const method = request.method
+  if (method !== 'GET') {
+    response.statusCode = 405
+    return response.end()
+  }
+
   const orderID = request.query.orderID
   if (!schemas.validate.id(orderID)) {
     return notFound(request, response, orderID)
@@ -138,15 +134,6 @@ function get (request, response) {
       }, (error, results) => {
         if (error) return internalError(request, response, error)
 
-        const orderData = {
-          purchase_units: [
-            {
-              amount: {
-                value: amountToValue(results.total)
-              }
-            }
-          ]
-        }
         const src = 'https://www.paypal.com/sdk/js?' + querystring.stringify({
           'client-id': process.env.PAYPAL_CLIENT_ID,
           commit: 'false', // Show "Pay Now", not "Continue".
@@ -163,7 +150,7 @@ function get (request, response) {
 <div id="paypal-playpen"></div>
 <script src="${src}"></script>
 <script>
-var orderData = ${JSON.stringify(orderData)}
+var orderID = ${orderID}
 ${results.javascript}
 </script>
         `.trim()
@@ -209,7 +196,4 @@ function render ({ request, response, read, statusCode = 200, data }) {
     response.setHeader('Content-Type', 'text/html')
     response.end(html)
   })
-}
-
-function post (request, response) {
 }
